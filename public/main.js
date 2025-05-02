@@ -6,7 +6,7 @@ const removeTask = async({ target }) => {
     const taskID = target.value;
     console.log(taskID);
     try {
-        const res = await fetch(`${tasksEndpoint}/id/${taskID}`, {
+        const res = await fetch(`${tasksEndpoint}?id=${taskID}`, {
             method: 'delete'
         })
         console.log(res);

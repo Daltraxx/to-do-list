@@ -43,8 +43,9 @@ const startServer = async() => {
             }
         })
 
-        app.delete('/api/tasks/id/:taskID', async(req, res) => {
-            const taskID = req.params.taskID;
+        app.delete('/api/tasks', async(req, res) => {
+            const taskID = req.query.id;
+            console.log(taskID);
             try {
                 const deleteResult = await tasksCollection.deleteOne({ _id: new ObjectId(taskID) });
                 console.log(deleteResult);
