@@ -55,6 +55,29 @@ const startServer = async() => {
                 console.error(error);
             }
         })
+
+        app.put('/api/tasks', async(req, res) => {
+            const taskID = req.query.id;
+            const dbQuery = { _id: new ObjectId(taskID) }
+            try {
+                const task = await tasksCollection.findOne(dbQuery);
+                if (task.completed) {
+                    const updateResult = await tasksCollection.updateOne(dbQuery , {
+                        $set: { completed: false }
+                    })
+                    console.log(updateResult);
+                    res.json(`Marked task with id ${taskID} incomplete`);
+                } else {
+                    const updateResult = await tasksCollection.updateOne(dbQuery , {
+                        $set: { completed: true }
+                    })
+                    console.log(updateResult);
+                    res.status(200).json(`Marked task with id ${taskID} complete`);
+                }
+            } catch(error) {
+                console.error(error);
+            }
+        })
         
         app.listen(PORT, (req, res) => {
             console.log(`Server listening on port ${PORT}`);

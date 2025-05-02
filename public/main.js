@@ -6,9 +6,19 @@ const removeTask = async({ target }) => {
     const taskID = target.value;
     console.log(taskID);
     try {
-        const res = await fetch(`${tasksEndpoint}?id=${taskID}`, {
-            method: 'delete'
-        })
+        const res = await fetch(`${tasksEndpoint}?id=${taskID}`, { method: 'delete' });
+        console.log(res);
+        location.reload();
+    } catch(error) {
+        console.error(error);
+    }
+}
+
+const completeTask = async({ target }) => {
+    //refactor to handle whether complete or not here and send with request rather than on server-side
+    const taskID = target.id;
+    try {
+        const res = await fetch(`${tasksEndpoint}?id=${taskID}`, { method: 'put' });
         console.log(res);
         location.reload();
     } catch(error) {
@@ -17,5 +27,7 @@ const removeTask = async({ target }) => {
 }
 
 const removeButtons = document.querySelectorAll('.remove-btn');
-
 Array.from(removeButtons).forEach((button) => button.addEventListener('click', removeTask));
+
+const taskSpans = document.querySelectorAll('.task');
+Array.from(taskSpans).forEach((taskSpan) => taskSpan.addEventListener('click', completeTask));
