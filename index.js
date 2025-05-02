@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const { ObjectId } = require('mongodb');
 const app = express();
 const PORT = process.env.PORT;
 
@@ -24,7 +25,7 @@ const startServer = async() => {
         app.get('/', async(req, res) => {
             try {
                 const tasks = await tasksCollection.find().toArray();
-                //console.log(tasks);
+                console.log(tasks);
                 res.render('index.ejs', { tasks: tasks});
             } catch(error) {
                 console.error(error);
@@ -42,12 +43,13 @@ const startServer = async() => {
             }
         })
 
-        app.delete('/api/tasks/:taskName', async(req, res) => {
-            const taskName = req.params.taskName;
+        app.delete('/api/tasks/id/:taskID', async(req, res) => {
+            const taskID = req.params.taskID;
             try {
-                const deleteResult = await tasksCollection.deleteOne({ taskName: taskName});
+                const deleteResult = await tasksCollection.deleteOne({ _id: new ObjectId(taskID) });
+                console.log(deleteResult);
                 console.log('Task deleted');
-                res.status(204);
+                res.status(200).json(`Task with id ${taskID} deleted`);
             } catch(error) {
                 console.error(error);
             }

@@ -16,7 +16,7 @@
             <span><%= tasks[i].taskName %></span>
         <% } %>
             <button class="complete-btn">Complete</button>
-            <button class="remove-btn">Remove</button>
+            <button class="remove-btn" value="<%= tasks[i]._id %>">Remove</button>
         </li>
     <% } %>
     </ul>
