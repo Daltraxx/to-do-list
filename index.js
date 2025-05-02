@@ -41,6 +41,17 @@ const startServer = async() => {
                 console.error(error);
             }
         })
+
+        app.delete('/api/tasks/:taskName', async(req, res) => {
+            const taskName = req.params.taskName;
+            try {
+                const deleteResult = await tasksCollection.deleteOne({ taskName: taskName});
+                console.log('Task deleted');
+                res.status(204);
+            } catch(error) {
+                console.error(error);
+            }
+        })
         
         app.listen(PORT, (req, res) => {
             console.log(`Server listening on port ${PORT}`);
