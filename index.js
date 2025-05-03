@@ -74,8 +74,9 @@ const startServer = async() => {
                     $set: { completed: newCompletionStatus }
                 })
                 
-                
-                res.json(`Set task with id ${taskID} to complete status of ${newCompletionStatus}`);
+                updateResult.matchedCount > 0 ?
+                    res.json(`Set task with id ${taskID} to complete status of ${newCompletionStatus}`) :
+                    res.status(404).json('No matching task found');
                 
             } catch(error) {
                 console.error(error);
