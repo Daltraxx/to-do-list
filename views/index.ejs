@@ -20,6 +20,7 @@
         </li>
     <% } %>
     </ul>
+    <h3>Tasks Remaining: <%= incompleteTasks %></span></h3>
     <form action="/api/tasks" method="POST">
         <input type="text" name="taskName">
         <input type="submit">

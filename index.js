@@ -29,8 +29,9 @@ const startServer = async() => {
         app.get('/', async(req, res) => {
             try {
                 const tasks = await tasksCollection.find().toArray();
+                const incompleteTasks = await tasksCollection.countDocuments({ completed: false });
                 // console.log(tasks);
-                res.render('index.ejs', { tasks: tasks});
+                res.render('index.ejs', { tasks: tasks, incompleteTasks: incompleteTasks });
             } catch(error) {
                 console.error(error);
             }
