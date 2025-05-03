@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-const { ObjectId } = require('mongodb');
 const app = express();
 const PORT = process.env.PORT;
 
@@ -15,7 +14,8 @@ const morgan = require('morgan');
 morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
-const MongoClient = require('mongodb').MongoClient;
+const{ MongoClient, ObjectId} = require('mongodb');
+
 const dbConnectionString = process.env.DB_STRING;
 const dbName = 'tasks-list';
 
@@ -49,22 +49,27 @@ const startServer = async() => {
 
         app.delete('/api/tasks', async(req, res) => {
             const taskID = req.query.id;
-            // console.log(taskID);
+            console.log(taskID);
             try {
                 const deleteResult = await tasksCollection.deleteOne({ _id: new ObjectId(taskID) });
                 console.log(deleteResult);
-                console.log('Task deleted');
-                res.status(200).json(`Task with id ${taskID} deleted`);
+
+                deleteResult.deletedCount > 0 ? 
+                    res.status(200).json(`Task with id ${taskID} deleted`) :
+                    res.status(404).json(`No task with id ${taskID} found`);
+                
             } catch(error) {
                 console.error(error);
+                res.status(400).json('Invalid ID');
             }
         })
 
         app.put('/api/tasks', async(req, res) => {
             const taskID = req.query.id;
-            const dbQuery = { _id: new ObjectId(taskID) }
             try {
+                const dbQuery = { _id: new ObjectId(taskID) };
                 const task = await tasksCollection.findOne(dbQuery);
+
                 if (task.completed) {
                     const updateResult = await tasksCollection.updateOne(dbQuery , {
                         $set: { completed: false }
