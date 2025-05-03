@@ -14,7 +14,7 @@ const removeTask = async({ target }) => {
     }
 }
 
-const completeTask = async({ target }) => {
+const toggleCompletionStatus = async({ target }) => {
     //refactor to handle whether complete or not here and send with request rather than on server-side
     const taskID = target.id;
     const newCompletionStatus = target.classList.contains('complete') ? 'false' : 'true';
@@ -33,4 +33,4 @@ const removeButtons = document.querySelectorAll('.remove-btn');
 Array.from(removeButtons).forEach((button) => button.addEventListener('click', removeTask));
 
 const taskSpans = document.querySelectorAll('.task');
-Array.from(taskSpans).forEach((taskSpan) => taskSpan.addEventListener('click', completeTask));
+Array.from(taskSpans).forEach((taskSpan) => taskSpan.addEventListener('click', toggleCompletionStatus));
