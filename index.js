@@ -11,6 +11,10 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const morgan = require('morgan');
+morgan.token('body', (req) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+
 const MongoClient = require('mongodb').MongoClient;
 const dbConnectionString = process.env.DB_STRING;
 const dbName = 'tasks-list';
@@ -25,7 +29,7 @@ const startServer = async() => {
         app.get('/', async(req, res) => {
             try {
                 const tasks = await tasksCollection.find().toArray();
-                console.log(tasks);
+                // console.log(tasks);
                 res.render('index.ejs', { tasks: tasks});
             } catch(error) {
                 console.error(error);
@@ -45,7 +49,7 @@ const startServer = async() => {
 
         app.delete('/api/tasks', async(req, res) => {
             const taskID = req.query.id;
-            console.log(taskID);
+            // console.log(taskID);
             try {
                 const deleteResult = await tasksCollection.deleteOne({ _id: new ObjectId(taskID) });
                 console.log(deleteResult);
@@ -65,13 +69,13 @@ const startServer = async() => {
                     const updateResult = await tasksCollection.updateOne(dbQuery , {
                         $set: { completed: false }
                     })
-                    console.log(updateResult);
+                    // console.log(updateResult);
                     res.json(`Marked task with id ${taskID} incomplete`);
                 } else {
                     const updateResult = await tasksCollection.updateOne(dbQuery , {
                         $set: { completed: true }
                     })
-                    console.log(updateResult);
+                    // console.log(updateResult);
                     res.status(200).json(`Marked task with id ${taskID} complete`);
                 }
             } catch(error) {
