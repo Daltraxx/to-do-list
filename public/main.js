@@ -17,13 +17,16 @@ const removeTask = async({ target }) => {
 const completeTask = async({ target }) => {
     //refactor to handle whether complete or not here and send with request rather than on server-side
     const taskID = target.id;
+    const newCompletionStatus = target.classList.contains('complete') ? 'false' : 'true';
     try {
-        const res = await fetch(`${tasksEndpoint}?id=${taskID}`, { method: 'put' });
+        const res = await fetch(`${tasksEndpoint}?id=${taskID}&complete=${newCompletionStatus}`, { method: 'put' });
         console.log(res);
         location.reload();
     } catch(error) {
         console.error(error);
     }
+    
+    
 }
 
 const removeButtons = document.querySelectorAll('.remove-btn');

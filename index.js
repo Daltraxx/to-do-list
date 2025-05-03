@@ -66,23 +66,17 @@ const startServer = async() => {
 
         app.put('/api/tasks', async(req, res) => {
             const taskID = req.query.id;
+            const newCompletionStatus = req.query.complete === 'true' ? true : false;''
             try {
                 const dbQuery = { _id: new ObjectId(taskID) };
-                const task = await tasksCollection.findOne(dbQuery);
-
-                if (task.completed) {
-                    const updateResult = await tasksCollection.updateOne(dbQuery , {
-                        $set: { completed: false }
-                    })
-                    // console.log(updateResult);
-                    res.json(`Marked task with id ${taskID} incomplete`);
-                } else {
-                    const updateResult = await tasksCollection.updateOne(dbQuery , {
-                        $set: { completed: true }
-                    })
-                    // console.log(updateResult);
-                    res.status(200).json(`Marked task with id ${taskID} complete`);
-                }
+                
+                const updateResult = await tasksCollection.updateOne(dbQuery , {
+                    $set: { completed: newCompletionStatus }
+                })
+                
+                
+                res.json(`Set task with id ${taskID} to complete status of ${newCompletionStatus}`);
+                
             } catch(error) {
                 console.error(error);
             }
